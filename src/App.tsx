@@ -1,11 +1,11 @@
-import './App.css'
+import { BrowserRouter } from 'react-router-dom'
+import Header from './components/Header'
 
 function App() {
   return (
-    <main className="app">
-      <h1>React App</h1>
-      <p>Vite + React + TypeScript</p>
-    </main>
+    <BrowserRouter>
+      <Header />
+    </BrowserRouter>
   )
 }
 
