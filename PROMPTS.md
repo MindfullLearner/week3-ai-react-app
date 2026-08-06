@@ -81,6 +81,30 @@ Requirements:
 
 Create only minimal placeholder exports so the application can compile.
 
+---
+
+## Prompt 6 – Create the Favourites MVVM Structure
+
+Create the empty MVVM file structure for the Favourites page of the Book Finder application.
+
+Create:
+
+- `src/pages/Favourites/FavouritesModel.ts`
+- `src/pages/Favourites/useFavouritesViewModel.ts`
+- `src/pages/Favourites/FavouritesView.tsx`
+
+Requirements:
+
+- FavouritesModel.ts will later contain favourite book data models and business logic.
+- useFavouritesViewModel.ts will later contain React state, actions, and favourite book management logic.
+- FavouritesView.tsx will later render the Favourites page user interface.
+
+Create only minimal placeholder exports so the application can compile.
+
+Do not add localStorage, API requests, React state, book cards, or other functionality.
+
+Keep the code clean, beginner-friendly, and follow the MVVM architecture.
+
 Do not add API requests, React state, book search functionality, or UI components yet.
 
 Keep the code clean, beginner-friendly, and follow the MVVM architecture.
