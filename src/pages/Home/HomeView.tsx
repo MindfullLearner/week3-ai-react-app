@@ -1,10 +1,4 @@
-/**
- * Home page view.
- * The Home page user interface will be rendered here.
- */
-function HomeView() {
-  return null
-}
+
 // Home View
 // Renders the Home page UI: loading/error states and the book list.
 // The search input lives in Header; this view only displays results.
