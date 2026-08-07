@@ -1,0 +1,63 @@
+.book-card {
+  display: flex;
+  flex-direction: column;
+  width: 180px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.book-card__cover {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  background-color: #f2f2f2;
+}
+
+.book-card__cover--placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999999;
+  font-size: 0.85rem;
+}
+
+.book-card__details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px;
+}
+
+.book-card__title {
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.book-card__author {
+  font-size: 0.85rem;
+  color: #555555;
+  margin: 0;
+}
+
+.book-card__year {
+  font-size: 0.8rem;
+  color: #777777;
+  margin: 0;
+}
+
+.book-card__favourite-button {
+  margin-top: 8px;
+  padding: 6px 10px;
+  font-size: 0.8rem;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  background-color: #ffffff;
+  cursor: pointer;
+}
+
+.book-card__favourite-button:hover {
+  background-color: #f5f5f5;
+}
