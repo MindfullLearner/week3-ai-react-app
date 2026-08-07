@@ -5,9 +5,10 @@ interface HeaderProps {
   query: string
   setQuery: (value: string) => void
   onSearch: () => void
+  onHomeClick: () => void
 }
 
-function Header({ query, setQuery, onSearch }: HeaderProps) {
+function Header({ query, setQuery, onSearch, onHomeClick }: HeaderProps) {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     onSearch()
@@ -16,7 +17,7 @@ function Header({ query, setQuery, onSearch }: HeaderProps) {
   return (
     <header className="header">
       <nav className="header__nav" aria-label="Main navigation">
-        <Link to="/" className="header__link">
+        <Link to="/" className="header__link" onClick={onHomeClick}>
           Home
         </Link>
         <Link to="/favourites" className="header__link">
