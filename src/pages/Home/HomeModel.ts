@@ -68,19 +68,6 @@ const removeDuplicateBooks = (books: Book[]): Book[] => {
   return Array.from(uniqueBooksMap.values());
 };
 
-// Cleans and validates the search query, then fetches matching books.
-export const getBooks = async (query: string): Promise<Book[]> => {
-  const trimmedQuery = query.trim();
-
-  if (trimmedQuery.length < 2) {
-    throw new Error("Search query must be at least 2 characters long");
-  }
-
-  const books = await searchBooks(trimmedQuery);
-
-  return books;
-};
-
 // Fetches a random, varied selection of books to display when the Home
 // screen first opens. A different set of keywords is chosen on every call,
 // so the results differ between application launches.
