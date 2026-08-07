@@ -1,9 +1,9 @@
-
 // Home View
 // Renders the Home page UI: loading/error states and the book list.
 // The search input lives in Header; this view only displays results.
 
 import type { Book } from "../../types/book";
+import BookCard from "../../components/BookCard/BookCard";
 
 interface HomeViewProps {
   books: Book[];
@@ -20,20 +20,13 @@ const HomeView = ({ books, loading, error }: HomeViewProps) => {
 
       {error && <p>{error}</p>}
 
-      <ul>
+      <div className="book-list">
         {books.map((book) => (
-          <li key={book.id}>
-            {book.coverUrl && (
-              <img src={book.coverUrl} alt={`Cover of ${book.title}`} width={80} />
-            )}
-            <h3>{book.title}</h3>
-            <p>Author: {book.author}</p>
-            <p>First published: {book.firstPublishYear ?? "Unknown"}</p>
-          </li>
+          <BookCard key={book.id} book={book} />
         ))}
-      </ul>
+      </div>
     </div>
   );
 };
 
-export default HomeView
+export default HomeView;
