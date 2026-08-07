@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Header from './components/Header/Header'
+import Header from './components/Header'
 import HomeView from './pages/Home/HomeView'
 import FavouritesView from './pages/Favourites/FavouritesView'
 import { useHomeViewModel } from './pages/Home/useHomeViewModel'
