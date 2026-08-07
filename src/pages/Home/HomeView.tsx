@@ -4,6 +4,7 @@
 
 import type { Book } from "../../types/book";
 import BookCard from "../../components/BookCard/BookCard";
+import "./HomeView.css";
 
 interface HomeViewProps {
   books: Book[];
