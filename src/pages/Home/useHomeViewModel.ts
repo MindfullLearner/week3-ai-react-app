@@ -11,24 +11,26 @@ export const useHomeViewModel = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Loads a fresh random selection of books using the existing initialBooks() logic.
+  // Reused both on first mount and whenever the user navigates back to Home.
+  const loadInitialBooks = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const result = await initialBooks();
+      setBooks(result);
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "Something went wrong while loading books";
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Fetches a random initial set of books when the Home screen first opens.
   useEffect(() => {
-    const loadInitialBooks = async () => {
-      setLoading(true);
-      setError(null);
-
-      try {
-        const result = await initialBooks();
-        setBooks(result);
-      } catch (err) {
-        const message =
-          err instanceof Error ? err.message : "Something went wrong while loading books";
-        setError(message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     loadInitialBooks();
   }, []);
 
@@ -56,5 +58,6 @@ export const useHomeViewModel = () => {
     loading,
     error,
     handleSearch,
+    loadInitialBooks,
   };
 };
