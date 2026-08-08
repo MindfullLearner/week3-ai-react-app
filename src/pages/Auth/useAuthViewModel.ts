@@ -3,8 +3,7 @@
 
 import { useState } from "react";
 import { login, register } from "./AuthModel";
-
-type AuthMode = "login" | "register";
+import type { AuthMode } from "../../types/auth";
 
 export const useAuthViewModel = () => {
   const [email, setEmail] = useState("");
@@ -13,8 +12,6 @@ export const useAuthViewModel = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Submits the current email/password using the appropriate AuthModel
-  // function based on the current mode.
   const handleSubmit = async () => {
     setLoading(true);
     setError(null);
@@ -36,7 +33,6 @@ export const useAuthViewModel = () => {
     }
   };
 
-  // Switches between "login" and "register" modes and clears any previous error.
   const toggleMode = () => {
     setMode((previousMode) => (previousMode === "login" ? "register" : "login"));
     setError(null);

@@ -51,3 +51,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   return (
     <AuthContext.Provider value={{ user, authLoading, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+// Hook for consuming the AuthContext from any component.
+export const useAuth = (): AuthContextValue => {
+  const context = useContext(AuthContext);
+
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+
+  return context;
+};
