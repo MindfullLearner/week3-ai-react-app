@@ -3,6 +3,7 @@
 
 import { useFavouritesViewModel } from "./useFavouritesViewModel";
 import BookCard from "../../components/BookCard/BookCard";
+import "./FavouritesView.css";
 
 const FavouritesView = () => {
   const { favourites, loading, error, removeBook } = useFavouritesViewModel();
@@ -21,7 +22,12 @@ const FavouritesView = () => {
 
       <div className="book-list">
         {favourites.map((book) => (
-          <BookCard key={book.id} book={book} onFavouriteClick={() => removeBook(book.id)} />
+          <BookCard
+            key={book.id}
+            book={book}
+            variant="remove"
+            onFavouriteClick={() => removeBook(book.id)}
+          />
         ))}
       </div>
     </div>

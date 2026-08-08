@@ -10,9 +10,19 @@ interface HomeViewProps {
   books: Book[];
   loading: boolean;
   error: string | null;
+  favouriteIds: Set<string>;
+  favouriteError: string | null;
+  onAddFavourite: (book: Book) => void;
 }
 
-const HomeView = ({ books, loading, error }: HomeViewProps) => {
+const HomeView = ({
+  books,
+  loading,
+  error,
+  favouriteIds,
+  favouriteError,
+  onAddFavourite,
+}: HomeViewProps) => {
   return (
     <div>
       <h1>Book Finder</h1>
@@ -21,9 +31,16 @@ const HomeView = ({ books, loading, error }: HomeViewProps) => {
 
       {error && <p>{error}</p>}
 
+      {favouriteError && <p>{favouriteError}</p>}
+
       <div className="book-list">
         {books.map((book) => (
-          <BookCard key={book.id} book={book} />
+          <BookCard
+            key={book.id}
+            book={book}
+            isFavourite={favouriteIds.has(book.id)}
+            onFavouriteClick={() => onAddFavourite(book)}
+          />
         ))}
       </div>
     </div>

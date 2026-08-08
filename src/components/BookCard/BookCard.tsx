@@ -6,10 +6,20 @@ import "./BookCard.css";
 
 interface BookCardProps {
   book: Book;
+  isFavourite?: boolean;
   onFavouriteClick?: (book: Book) => void;
+  variant?: "favourite" | "remove";
 }
 
-const BookCard = ({ book, onFavouriteClick }: BookCardProps) => {
+const BookCard = ({
+  book,
+  isFavourite = false,
+  onFavouriteClick,
+  variant = "favourite",
+}: BookCardProps) => {
+  const buttonLabel =
+    variant === "remove" ? "Remove" : isFavourite ? "♥ Favourited" : "♡ Favourite";
+
   return (
     <div className="book-card">
       {book.coverUrl ? (
@@ -33,10 +43,12 @@ const BookCard = ({ book, onFavouriteClick }: BookCardProps) => {
 
         <button
           type="button"
-          className="book-card__favourite-button"
+          className={`book-card__favourite-button${
+            isFavourite ? " book-card__favourite-button--active" : ""
+          }`}
           onClick={() => onFavouriteClick?.(book)}
         >
-          ♡ Favourite
+          {buttonLabel}
         </button>
       </div>
     </div>

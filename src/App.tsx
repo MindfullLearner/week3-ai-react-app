@@ -5,8 +5,18 @@ import FavouritesView from './pages/Favourites/FavouritesView'
 import { useHomeViewModel } from './pages/Home/useHomeViewModel'
 
 function App() {
-  const { query, setQuery, books, loading, error, handleSearch, loadInitialBooks } =
-    useHomeViewModel()
+  const {
+    query,
+    setQuery,
+    books,
+    loading,
+    error,
+    handleSearch,
+    loadInitialBooks,
+    favouriteIds,
+    favouriteError,
+    handleAddFavourite,
+  } = useHomeViewModel()
 
   return (
     <BrowserRouter>
@@ -19,7 +29,16 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={<HomeView books={books} loading={loading} error={error} />}
+          element={
+            <HomeView
+              books={books}
+              loading={loading}
+              error={error}
+              favouriteIds={favouriteIds}
+              favouriteError={favouriteError}
+              onAddFavourite={handleAddFavourite}
+            />
+          }
         />
         <Route path="/favourites" element={<FavouritesView />} />
       </Routes>

@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from "react";
 import { getBooks, initialBooks } from "./HomeModel";
+import { saveFavourite } from "../Favourites/FavouritesModel";
 import type { Book } from "../../types/book";
 
 export const useHomeViewModel = () => {
@@ -11,8 +12,12 @@ export const useHomeViewModel = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Tracks which book ids have been added to favourites, so BookCard
+  // can reflect favourite status in the UI.
+  const [favouriteIds, setFavouriteIds] = useState<Set<string>>(new Set());
+  const [favouriteError, setFavouriteError] = useState<string | null>(null);
+
   // Loads a fresh random selection of books using the existing initialBooks() logic.
-  // Reused both on first mount and whenever the user navigates back to Home.
   const loadInitialBooks = async () => {
     setLoading(true);
     setError(null);
@@ -51,6 +56,20 @@ export const useHomeViewModel = () => {
     }
   };
 
+  // Adds a book to favourites and updates local state so the UI reflects it.
+  const handleAddFavourite = async (book: Book) => {
+    setFavouriteError(null);
+
+    try {
+      await saveFavourite(book);
+      setFavouriteIds((previousIds) => new Set(previousIds).add(book.id));
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "Something went wrong while adding the favourite";
+      setFavouriteError(message);
+    }
+  };
+
   return {
     query,
     setQuery,
@@ -59,5 +78,8 @@ export const useHomeViewModel = () => {
     error,
     handleSearch,
     loadInitialBooks,
+    favouriteIds,
+    favouriteError,
+    handleAddFavourite,
   };
 };

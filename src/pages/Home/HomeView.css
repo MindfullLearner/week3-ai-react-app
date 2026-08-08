@@ -18,3 +18,7 @@
     gap: 0.75rem;
   }
 }
+.book-card__favourite-button--active {
+  background: #2f7ec9;
+  color: #ffffff;
+}

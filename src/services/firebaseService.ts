@@ -1,16 +1,15 @@
 // Firebase Service
-// Initializes Firebase, exposes the Firestore database instance,
+// Initializes Firebase, exposes the Realtime Database instance,
 // and provides functions for managing favourite books.
 
 import { initializeApp } from "firebase/app";
 import {
-  getFirestore,
-  collection,
-  doc,
-  setDoc,
-  deleteDoc,
-  getDocs,
-} from "firebase/firestore";
+  getDatabase,
+  ref,
+  set,
+  remove,
+  get,
+} from "firebase/database";
 import type { Book } from "../types/book";
 
 const firebaseConfig = {
@@ -25,36 +24,55 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-export const db = getFirestore(app);
+export const db = getDatabase(app);
 
-// Name of the Firestore collection used to store favourite books.
-const FAVOURITES_COLLECTION = "favourites";
+// Path (node) in the Realtime Database used to store favourite books.
+const FAVOURITES_PATH = "favourites";
 
-// Adds a book to the favourites collection, using the book's id as the document id.
+// Open Library ids look like "/works/OL45804W". Firebase treats "/" as a
+// path separator, so using the id directly as a key would create nested
+// nodes instead of one flat entry. This converts it into a safe, flat key
+// while the original id is still stored unchanged inside the book object.
+const toSafeKey = (id: string): string => id.replace(/\//g, "_");
+
+// Adds a book to favourites, using a sanitized version of the book's id as its key.
 export const addFavourite = async (book: Book): Promise<void> => {
   try {
-    const favouriteRef = doc(db, FAVOURITES_COLLECTION, book.id);
-    await setDoc(favouriteRef, book);
+    // TEMP DEBUG LOG: inspect the exact book object being written
+    console.log("[firebaseService] addFavourite - book:", book);
+
+    const favouriteRef = ref(db, `${FAVOURITES_PATH}/${toSafeKey(book.id)}`);
+    await set(favouriteRef, book);
   } catch (err) {
     throw new Error(`Failed to add "${book.title}" to favourites`);
   }
 };
 
-// Removes a book from the favourites collection by its id.
+// Removes a favourite book by its id.
 export const removeFavourite = async (id: string): Promise<void> => {
   try {
-    const favouriteRef = doc(db, FAVOURITES_COLLECTION, id);
-    await deleteDoc(favouriteRef);
+    const favouriteRef = ref(db, `${FAVOURITES_PATH}/${toSafeKey(id)}`);
+    await remove(favouriteRef);
   } catch (err) {
     throw new Error(`Failed to remove book with id "${id}" from favourites`);
   }
 };
 
-// Retrieves all favourite books from Firestore.
+// Retrieves all favourite books from the Realtime Database.
 export const getFavourites = async (): Promise<Book[]> => {
   try {
-    const favouritesSnapshot = await getDocs(collection(db, FAVOURITES_COLLECTION));
-    const favourites = favouritesSnapshot.docs.map((docSnapshot) => docSnapshot.data() as Book);
+    const favouritesRef = ref(db, FAVOURITES_PATH);
+    const snapshot = await get(favouritesRef);
+
+    if (!snapshot.exists()) {
+      return [];
+    }
+
+    const favouritesObject = snapshot.val() as Record<string, Book>;
+    const favourites = Object.values(favouritesObject);
+
+    // TEMP DEBUG LOG: inspect exactly what comes back from Firebase
+    console.log("[firebaseService] getFavourites - retrieved:", favourites);
 
     return favourites;
   } catch (err) {
