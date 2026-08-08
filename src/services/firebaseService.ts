@@ -1,6 +1,10 @@
 // Firebase Service
-// Initializes Firebase, exposes the Realtime Database instance,
-// and provides functions for managing favourite books.
+// Initializes Firebase (app, Realtime Database, Authentication, and Firestore)
+// and provides functions for managing favourite books via Realtime Database.
+//
+// NOTE: Authentication and Firestore are initialized here for future use.
+// The existing favourites feature continues to run on Realtime Database (db)
+// and is unchanged.
 
 import { initializeApp } from "firebase/app";
 import {
@@ -10,6 +14,8 @@ import {
   remove,
   get,
 } from "firebase/database";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 import type { Book } from "../types/book";
 
 const firebaseConfig = {
@@ -24,7 +30,18 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
+// Realtime Database instance - existing favourites feature depends on this.
 export const db = getDatabase(app);
+
+// Firebase Authentication instance - not wired to any UI yet.
+export const auth = getAuth(app);
+
+// Cloud Firestore instance - not used by any feature yet.
+export const firestoreDb = getFirestore(app);
+
+// ---------------------------------------------------------------------------
+// Favourites functionality (Realtime Database) - unchanged from before.
+// ---------------------------------------------------------------------------
 
 // Path (node) in the Realtime Database used to store favourite books.
 const FAVOURITES_PATH = "favourites";
@@ -38,9 +55,6 @@ const toSafeKey = (id: string): string => id.replace(/\//g, "_");
 // Adds a book to favourites, using a sanitized version of the book's id as its key.
 export const addFavourite = async (book: Book): Promise<void> => {
   try {
-    // TEMP DEBUG LOG: inspect the exact book object being written
-    console.log("[firebaseService] addFavourite - book:", book);
-
     const favouriteRef = ref(db, `${FAVOURITES_PATH}/${toSafeKey(book.id)}`);
     await set(favouriteRef, book);
   } catch (err) {
@@ -70,9 +84,6 @@ export const getFavourites = async (): Promise<Book[]> => {
 
     const favouritesObject = snapshot.val() as Record<string, Book>;
     const favourites = Object.values(favouritesObject);
-
-    // TEMP DEBUG LOG: inspect exactly what comes back from Firebase
-    console.log("[firebaseService] getFavourites - retrieved:", favourites);
 
     return favourites;
   } catch (err) {
