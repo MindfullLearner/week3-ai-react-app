@@ -1,15 +1,15 @@
 // BookCard
 // A presentational component that displays a single book's details.
-// The Favourite button is present but not wired up to any logic yet.
 
 import type { Book } from "../../types/book";
 import "./BookCard.css";
 
 interface BookCardProps {
   book: Book;
+  onFavouriteClick?: (book: Book) => void;
 }
 
-const BookCard = ({ book }: BookCardProps) => {
+const BookCard = ({ book, onFavouriteClick }: BookCardProps) => {
   return (
     <div className="book-card">
       {book.coverUrl ? (
@@ -31,8 +31,11 @@ const BookCard = ({ book }: BookCardProps) => {
           First published: {book.firstPublishYear ?? "Unknown"}
         </p>
 
-        {/* Not connected yet - will be wired up later */}
-        <button type="button" className="book-card__favourite-button">
+        <button
+          type="button"
+          className="book-card__favourite-button"
+          onClick={() => onFavouriteClick?.(book)}
+        >
           ♡ Favourite
         </button>
       </div>
