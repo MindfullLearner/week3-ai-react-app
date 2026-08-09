@@ -60,10 +60,14 @@ export const useHomeViewModel = () => {
 
   // Adds a book to favourites and updates local state so the UI reflects it.
   const addFavourite = async (book: Book) => {
+    if (!user) {
+      return;
+    }
+
     setFavouriteError(null);
 
     try {
-      await saveFavourite(book);
+      await saveFavourite(user.uid, book);
       setFavouriteIds((previousIds) => new Set(previousIds).add(book.id));
     } catch (err) {
       const message =
