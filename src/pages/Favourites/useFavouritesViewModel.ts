@@ -3,20 +3,27 @@
 
 import { useState, useEffect } from "react";
 import { loadFavourites, deleteFavourite } from "./FavouritesModel";
+import { useAuth } from "../../context/AuthContext";
 import type { Book } from "../../types/book";
 
 export const useFavouritesViewModel = () => {
+  const { user } = useAuth();
+
   const [favourites, setFavourites] = useState<Book[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Loads all favourite books and updates state accordingly.
   const loadBooks = async () => {
+    if (!user) {
+      setFavourites([]);
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
     try {
-      const result = await loadFavourites();
+      const result = await loadFavourites(user.uid);
       setFavourites(result);
     } catch (err) {
       const message =
@@ -27,13 +34,16 @@ export const useFavouritesViewModel = () => {
     }
   };
 
-  // Removes a favourite book by id and updates local state on success.
   const removeBook = async (id: string) => {
+    if (!user) {
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
     try {
-      await deleteFavourite(id);
+      await deleteFavourite(user.uid, id);
       setFavourites((previousFavourites) =>
         previousFavourites.filter((book) => book.id !== id)
       );
@@ -46,10 +56,9 @@ export const useFavouritesViewModel = () => {
     }
   };
 
-  // Loads favourites when the Favourites screen first opens.
   useEffect(() => {
     loadBooks();
-  }, []);
+  }, [user]);
 
   return {
     favourites,
