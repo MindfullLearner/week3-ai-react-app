@@ -8,17 +8,14 @@ import {
 } from "../../services/firebaseService";
 import type { Book } from "../../types/book";
 
-// Loads all favourite books.
-export const loadFavourites = async (): Promise<Book[]> => {
-  return getFavourites();
+export const loadFavourites = async (userId: string): Promise<Book[]> => {
+  return getFavourites(userId);
 };
 
-// Saves a book to favourites, using the book's id as the unique identifier.
-export const saveFavourite = async (book: Book): Promise<void> => {
-  return addFavourite(book);
+export const saveFavourite = async (userId: string, book: Book): Promise<void> => {
+  return addFavourite(userId, book);
 };
 
-// Deletes a favourite book by its id.
-export const deleteFavourite = async (id: string): Promise<void> => {
-  return removeFavourite(id);
+export const deleteFavourite = async (userId: string, id: string): Promise<void> => {
+  return removeFavourite(userId, id);
 };
