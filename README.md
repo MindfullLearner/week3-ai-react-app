@@ -2,6 +2,8 @@
 
 A React + TypeScript application for searching books via the Open Library API, saving personal favourites, and managing a signed-in user session — built following the **MVVM (Model–View–ViewModel)** architecture.
 
+🌐 **Live Demo:** [BookFinder](https://week3-ai-react-app.vercel.app/)
+
 ## Features
 
 - 🔍 Search for books using the Open Library Search API
