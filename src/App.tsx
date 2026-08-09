@@ -1,7 +1,10 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Header from './components/Header'
+import Header from './components/Header/Header'
 import HomeView from './pages/Home/HomeView'
 import FavouritesView from './pages/Favourites/FavouritesView'
+import AuthView from './pages/Auth/AuthView'
+import ProtectedRoute from './components/ProtectedRoute'
+import RedirectIfAuthenticated from './components/RedirectIfAuthenticated'
 import { useHomeViewModel } from './pages/Home/useHomeViewModel'
 
 function App() {
@@ -40,7 +43,22 @@ function App() {
             />
           }
         />
-        <Route path="/favourites" element={<FavouritesView />} />
+        <Route
+          path="/favourites"
+          element={
+            <ProtectedRoute>
+              <FavouritesView />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/auth"
+          element={
+            <RedirectIfAuthenticated>
+              <AuthView />
+            </RedirectIfAuthenticated>
+          }
+        />
       </Routes>
     </BrowserRouter>
   )
