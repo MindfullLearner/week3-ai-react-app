@@ -128,3 +128,20 @@
     align-items: stretch;
   }
 }
+
+.header__logout-button {
+  padding: 0.4rem 0.75rem;
+  border: 1px solid #2f7ec9;
+  border-radius: 6px;
+  background: transparent;
+  color: #2f7ec9;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.header__logout-button:hover {
+  background: #2f7ec9;
+  color: #ffffff;
+}

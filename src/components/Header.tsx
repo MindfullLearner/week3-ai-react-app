@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 import './Header.css'
 
 interface HeaderProps {
@@ -9,6 +10,8 @@ interface HeaderProps {
 }
 
 function Header({ query, setQuery, onSearch, onHomeClick }: HeaderProps) {
+  const { user, logout } = useAuth()
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     onSearch()
@@ -23,6 +26,12 @@ function Header({ query, setQuery, onSearch, onHomeClick }: HeaderProps) {
         <Link to="/favourites" className="header__link">
           Favourites
         </Link>
+
+        {user && (
+          <button type="button" className="header__logout-button" onClick={logout}>
+            Logout
+          </button>
+        )}
       </nav>
 
       <form className="header__search" onSubmit={handleSubmit}>
