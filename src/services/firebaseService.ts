@@ -1,10 +1,6 @@
 // Firebase Service
 // Initializes Firebase (app, Realtime Database, Authentication, and Firestore)
-// and provides functions for managing favourite books via Realtime Database.
-//
-// NOTE: Authentication and Firestore are initialized here for future use.
-// The existing favourites feature continues to run on Realtime Database (db)
-// and is unchanged.
+// and provides functions for managing a signed-in user's favourite books.
 
 import { initializeApp } from "firebase/app";
 import {
@@ -30,21 +26,14 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-// Realtime Database instance - existing favourites feature depends on this.
 export const db = getDatabase(app);
-
-// Firebase Authentication instance - not wired to any UI yet.
 export const auth = getAuth(app);
-
-// Cloud Firestore instance - not used by any feature yet.
 export const firestoreDb = getFirestore(app);
 
 // ---------------------------------------------------------------------------
-// Favourites functionality (Realtime Database) - unchanged from before.
+// Favourites functionality (Realtime Database)
+// Structure: users/{userId}/favourites/{bookId}
 // ---------------------------------------------------------------------------
-
-// Path (node) in the Realtime Database used to store favourite books.
-const FAVOURITES_PATH = "favourites";
 
 // Open Library ids look like "/works/OL45804W". Firebase treats "/" as a
 // path separator, so using the id directly as a key would create nested
@@ -52,30 +41,46 @@ const FAVOURITES_PATH = "favourites";
 // while the original id is still stored unchanged inside the book object.
 const toSafeKey = (id: string): string => id.replace(/\//g, "_");
 
-// Adds a book to favourites, using a sanitized version of the book's id as its key.
-export const addFavourite = async (book: Book): Promise<void> => {
+// Builds the favourites path for a given user, throwing a readable error
+// if userId is missing.
+const getUserFavouritesPath = (userId: string): string => {
+  if (!userId) {
+    throw new Error("A user ID is required to manage favourites.");
+  }
+
+  return `users/${userId}/favourites`;
+};
+
+// Adds a book to a specific user's favourites.
+export const addFavourite = async (userId: string, book: Book): Promise<void> => {
+  const favouritesPath = getUserFavouritesPath(userId);
+
   try {
-    const favouriteRef = ref(db, `${FAVOURITES_PATH}/${toSafeKey(book.id)}`);
+    const favouriteRef = ref(db, `${favouritesPath}/${toSafeKey(book.id)}`);
     await set(favouriteRef, book);
   } catch (err) {
     throw new Error(`Failed to add "${book.title}" to favourites`);
   }
 };
 
-// Removes a favourite book by its id.
-export const removeFavourite = async (id: string): Promise<void> => {
+// Removes a favourite book by id for a specific user.
+export const removeFavourite = async (userId: string, id: string): Promise<void> => {
+  const favouritesPath = getUserFavouritesPath(userId);
+
   try {
-    const favouriteRef = ref(db, `${FAVOURITES_PATH}/${toSafeKey(id)}`);
+    const favouriteRef = ref(db, `${favouritesPath}/${toSafeKey(id)}`);
     await remove(favouriteRef);
   } catch (err) {
     throw new Error(`Failed to remove book with id "${id}" from favourites`);
   }
 };
 
-// Retrieves all favourite books from the Realtime Database.
-export const getFavourites = async (): Promise<Book[]> => {
+// Retrieves all favourite books for a specific user.
+export const getFavourites = async (userId: string): Promise<Book[]> => {
+  const favouritesPath = getUserFavouritesPath(userId);
+
   try {
-    const favouritesRef = ref(db, FAVOURITES_PATH);
+    const favouritesRef = ref(db, favouritesPath);
     const snapshot = await get(favouritesRef);
 
     if (!snapshot.exists()) {
