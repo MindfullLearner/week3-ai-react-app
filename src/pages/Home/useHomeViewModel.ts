@@ -2,18 +2,21 @@
 // Manages state and actions for the Home page.
 
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { getBooks, initialBooks } from "./HomeModel";
 import { saveFavourite } from "../Favourites/FavouritesModel";
+import { useAuth } from "../../context/AuthContext";
 import type { Book } from "../../types/book";
 
 export const useHomeViewModel = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
   const [query, setQuery] = useState("");
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Tracks which book ids have been added to favourites, so BookCard
-  // can reflect favourite status in the UI.
   const [favouriteIds, setFavouriteIds] = useState<Set<string>>(new Set());
   const [favouriteError, setFavouriteError] = useState<string | null>(null);
 
@@ -34,7 +37,6 @@ export const useHomeViewModel = () => {
     }
   };
 
-  // Fetches a random initial set of books when the Home screen first opens.
   useEffect(() => {
     loadInitialBooks();
   }, []);
@@ -57,7 +59,7 @@ export const useHomeViewModel = () => {
   };
 
   // Adds a book to favourites and updates local state so the UI reflects it.
-  const handleAddFavourite = async (book: Book) => {
+  const addFavourite = async (book: Book) => {
     setFavouriteError(null);
 
     try {
@@ -70,6 +72,17 @@ export const useHomeViewModel = () => {
     }
   };
 
+  // Decides what a Favourite button click should do: redirect unauthenticated
+  // users to /auth, or add the book to favourites for authenticated users.
+  const handleFavouriteClick = (book: Book) => {
+    if (!user) {
+      navigate("/auth");
+      return;
+    }
+
+    addFavourite(book);
+  };
+
   return {
     query,
     setQuery,
@@ -80,6 +93,6 @@ export const useHomeViewModel = () => {
     loadInitialBooks,
     favouriteIds,
     favouriteError,
-    handleAddFavourite,
+    handleFavouriteClick,
   };
 };

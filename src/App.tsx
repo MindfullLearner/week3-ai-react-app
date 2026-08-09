@@ -18,7 +18,7 @@ function App() {
     loadInitialBooks,
     favouriteIds,
     favouriteError,
-    handleAddFavourite,
+    handleFavouriteClick,
   } = useHomeViewModel()
 
   return (
@@ -39,7 +39,7 @@ function App() {
               error={error}
               favouriteIds={favouriteIds}
               favouriteError={favouriteError}
-              onAddFavourite={handleAddFavourite}
+              onFavouriteClick={handleFavouriteClick}
             />
           }
         />
