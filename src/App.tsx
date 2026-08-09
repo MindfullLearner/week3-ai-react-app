@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 import Header from './components/Header'
 import HomeView from './pages/Home/HomeView'
 import FavouritesView from './pages/Favourites/FavouritesView'
@@ -22,7 +22,7 @@ function App() {
   } = useHomeViewModel()
 
   return (
-    <BrowserRouter>
+    <>
       <Header
         query={query}
         setQuery={setQuery}
@@ -60,7 +60,7 @@ function App() {
           }
         />
       </Routes>
-    </BrowserRouter>
+    </>
   )
 }
 

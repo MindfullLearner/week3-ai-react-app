@@ -27,10 +27,14 @@ function Header({ query, setQuery, onSearch, onHomeClick }: HeaderProps) {
           Favourites
         </Link>
 
-        {user && (
+        {user ? (
           <button type="button" className="header__logout-button" onClick={logout}>
             Logout
           </button>
+        ) : (
+          <Link to="/auth" className="header__link">
+            Login
+          </Link>
         )}
       </nav>
 
