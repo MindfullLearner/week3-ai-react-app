@@ -144,4 +144,6 @@ npm run build
 
 Clicking the Favourite button while signed out redirects to `/auth` instead of saving.
 
+**Author**
+Nayab Maryam
 
